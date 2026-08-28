@@ -291,3 +291,21 @@
     <script src="script.js"></script>
 </body>
 </html>
+    <div id="polaroidPageLayer">
+        <div id="polaroidAlbumBg" style="background-image: url('album.jpg');"></div>
+        <div id="polaroidGradientOverlay"></div>
+
+        <div class="polaroid-top-bar">
+            <span class="polaroid-page-title">Galeri Polaroid</span>
+            <div style="display: flex; gap: 3px;">
+                <button class="pill-btn" onclick="shufflePolaroidLayout()" title="Acak Posisi Kartu">Acak</button>
+                <button class="pill-btn" onclick="downloadAllPolaroids()" title="Download Semua Sekaligus">Download</button>
+                <button class="pill-btn" onclick="document.getElementById('polaroidFileInput').click()">Tambah</button>
+            </div>
+        </div>
+
+        <div class="polaroid-feed-scroll" id="polaroidFeedContainer"></div>
+
+        <!-- Tombol Kembali di bagian bawah galeri -->
+        <button class="pill-btn" onclick="toggleSlidePage()">Kembali</button>
+    </div>
