@@ -648,24 +648,41 @@ function updatePolaroidCaption(index, newCaption) {
 function downloadSinglePolaroid(index) {
     const cardElement = document.getElementById(`polaroid-card-${index}`);
     const actionGroup = cardElement.querySelector('.polaroid-top-action-group');
+    const innerCard = cardElement.querySelector('.polaroid-inner');
     
+    const wasFlipped = polaroidPhotos[index].flipped;
+
+    polaroidPhotos[index].flipped = false;
+    cardElement.classList.remove('flipped');
+    if(innerCard) innerCard.style.transform = 'none';
     if(actionGroup) actionGroup.style.display = 'none';
 
-    html2canvas(cardElement, {
-        scale: 3,
-        useCORS: true,
-        backgroundColor: null
-    }).then(canvas => {
-        if(actionGroup) actionGroup.style.display = 'flex';
+    setTimeout(() => {
+        html2canvas(cardElement, {
+            scale: 3,
+            useCORS: true,
+            backgroundColor: null
+        }).then(canvas => {
+            if(actionGroup) actionGroup.style.display = 'flex';
+            if(innerCard) innerCard.style.transform = '';
+            
+            polaroidPhotos[index].flipped = wasFlipped;
+            if(wasFlipped) {
+                cardElement.classList.add('flipped');
+            }
 
-        const imageLink = document.createElement('a');
-        imageLink.download = `polaroid-memory-${index + 1}.png`;
-        imageLink.href = canvas.toDataURL('image/png');
-        imageLink.click();
-    }).catch(err => {
-        if(actionGroup) actionGroup.style.display = 'flex';
-        alert("Gagal mendownload foto polaroid. Pastikan gambar termuat dengan sempurna!");
-    });
+            const imageLink = document.createElement('a');
+            imageLink.download = `polaroid-memory-${index + 1}.png`;
+            imageLink.href = canvas.toDataURL('image/png');
+            imageLink.click();
+        }).catch(err => {
+            if(actionGroup) actionGroup.style.display = 'flex';
+            if(innerCard) innerCard.style.transform = '';
+            polaroidPhotos[index].flipped = wasFlipped;
+            if(wasFlipped) cardElement.classList.add('flipped');
+            alert("Gagal mendownload foto polaroid.");
+        });
+    }, 200);
 }
 
 function downloadAllPolaroids() {
@@ -679,25 +696,48 @@ function downloadAllPolaroids() {
     const actionGroups = layerElement.querySelectorAll('.polaroid-top-action-group');
     actionGroups.forEach(el => el.style.display = 'none');
 
-    html2canvas(layerElement, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: null
-    }).then(canvas => {
-        if(topBar) topBar.style.display = 'flex';
-        if(backBtn) backBtn.style.display = 'block';
-        actionGroups.forEach(el => el.style.display = 'flex');
-
-        const imageLink = document.createElement('a');
-        imageLink.download = 'galeri-polaroid-lengkap.png';
-        imageLink.href = canvas.toDataURL('image/png');
-        imageLink.click();
-    }).catch(err => {
-        if(topBar) topBar.style.display = 'flex';
-        if(backBtn) backBtn.style.display = 'block';
-        actionGroups.forEach(el => el.style.display = 'flex');
-        alert("Gagal mendownload galeri. Coba lagi ya!");
+    const previousFlips = polaroidPhotos.map(item => item.flipped);
+    polaroidPhotos.forEach((item, idx) => {
+        item.flipped = false;
+        const cardEl = document.getElementById(`polaroid-card-${idx}`);
+        if(cardEl) {
+            cardEl.classList.remove('flipped');
+            const inner = cardEl.querySelector('.polaroid-inner');
+            if(inner) inner.style.transform = 'none';
+        }
     });
+
+    setTimeout(() => {
+        html2canvas(layerElement, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: null
+        }).then(canvas => {
+            if(topBar) topBar.style.display = 'flex';
+            if(backBtn) backBtn.style.display = 'block';
+            actionGroups.forEach(el => el.style.display = 'flex');
+
+            polaroidPhotos.forEach((item, idx) => {
+                item.flipped = previousFlips[idx];
+                const cardEl = document.getElementById(`polaroid-card-${idx}`);
+                if(cardEl) {
+                    const inner = cardEl.querySelector('.polaroid-inner');
+                    if(inner) inner.style.transform = '';
+                    if(previousFlips[idx]) cardEl.classList.add('flipped');
+                }
+            });
+
+            const imageLink = document.createElement('a');
+            imageLink.download = 'galeri-polaroid-lengkap.png';
+            imageLink.href = canvas.toDataURL('image/png');
+            imageLink.click();
+        }).catch(err => {
+            if(topBar) topBar.style.display = 'flex';
+            if(backBtn) backBtn.style.display = 'block';
+            actionGroups.forEach(el => el.style.display = 'flex');
+            alert("Gagal mendownload galeri. Coba lagi ya!");
+        });
+    }, 250);
 }
 
 function renderLyrics() {
