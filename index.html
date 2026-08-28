@@ -43,6 +43,7 @@
     <input type="file" id="polaroidReplaceInput" accept="image/*" style="display: none;" onchange="replacePolaroidPhoto(event)">
     <input type="file" id="polaroidAudioInput" accept="audio/*" style="display: none;" onchange="loadPolaroidAudio(event)">
 
+    <!-- HALAMAN POLAROID -->
     <div id="polaroidPageLayer">
         <div id="polaroidAlbumBg" style="background-image: url('album.jpg');"></div>
         <div id="polaroidGradientOverlay"></div>
@@ -58,9 +59,10 @@
 
         <div class="polaroid-feed-scroll" id="polaroidFeedContainer"></div>
 
-        <button class="pill-btn" onclick="toggleSlidePage()" style="position: fixed; bottom: 20px; left: 20px; right: 20px; width: calc(100% - 40px); z-index: 700; max-width: 400px; margin: 0 auto; height: 40px; font-size: 11px; letter-spacing: 2px;">Kembali</button>
+        <button class="pill-btn" onclick="toggleSlidePage()" style="position: fixed; bottom: 45px; left: 20px; right: 20px; width: calc(100% - 40px); z-index: 99999; max-width: 400px; margin: 0 auto; height: 44px; font-size: 11px; letter-spacing: 2px;">Kembali</button>
     </div>
 
+    <!-- HALAMAN UTAMA -->
     <div class="viewport-container" id="mainViewportContainer">
         <div class="page-slide" id="mainSlideContainer">
             <div>
@@ -291,22 +293,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-    <div id="polaroidPageLayer">
-        <div id="polaroidAlbumBg" style="background-image: url('album.jpg');"></div>
-        <div id="polaroidGradientOverlay"></div>
-
-        <div class="polaroid-top-bar">
-            <span class="polaroid-page-title">Galeri Polaroid</span>
-            <div style="display: flex; gap: 3px;">
-                <button class="pill-btn" onclick="shufflePolaroidLayout()" title="Acak Posisi Kartu">Acak</button>
-                <button class="pill-btn" onclick="downloadAllPolaroids()" title="Download Semua Sekaligus">Download</button>
-                <button class="pill-btn" onclick="document.getElementById('polaroidFileInput').click()">Tambah</button>
-            </div>
-        </div>
-
-        <div class="polaroid-feed-scroll" id="polaroidFeedContainer"></div>
-
-        <!-- Tombol Kembali di bagian bawah galeri -->
-        <button class="pill-btn" onclick="toggleSlidePage()">Kembali</button>
-    </div>
-<button class="pill-btn" onclick="toggleSlidePage()" style="position: fixed; bottom: 45px; left: 20px; right: 20px; width: calc(100% - 40px); z-index: 99999; max-width: 400px; margin: 0 auto; height: 44px; font-size: 11px; letter-spacing: 2px;">Kembali</button>
