@@ -1678,3 +1678,23 @@ body.visual-on .footer-note {
     text-transform: uppercase;
     font-weight: 700;
 }
+
+/* Perbaikan Posisi Tombol Kembali di Bawah */
+#polaroidPageLayer > button.pill-btn {
+    position: fixed !important;
+    bottom: 30px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: calc(100% - 50px) !important;
+    max-width: 380px !important;
+    z-index: 99999 !important;
+    background: rgba(25, 25, 25, 0.85) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
+    height: 44px !important;
+    font-size: 11px !important;
+    letter-spacing: 2px !important;
+    font-weight: 700 !important;
+}
