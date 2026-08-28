@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unsaid Words</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="splashScreen">
+        <div style="position: absolute; top: -20px; left: -20px; right: -20px; bottom: -20px; overflow: hidden; z-index: -2;">
+            <img id="splashBgBlur" src="album.jpg" style="width: 100%; height: 100%; object-fit: cover; filter: blur(50px) brightness(0.65); transform: scale(1.15);" alt="Splash Blur">
+        </div>
+        <div class="splash-gradient-overlay"></div>
+        
+        <div class="splash-card-content">
+            <div class="splash-badge">WELCOME TO</div>
+            <div class="splash-title">Unsaid Words</div>
+            <div class="splash-subtitle">Side A Memories</div>
+            <button class="tap-enter-btn" onclick="openWebApp()">
+                <span>Tap to Enter</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+        </div>
+    </div>
+
+    <div id="dynamicAlbumBg"></div>
+    <div id="pageGradientOverlay"></div>
+
+    <video id="bgCanvasVideo" src="visual.mp4" autoplay loop muted playsinline></video>
+    <div id="canvasGradientOverlay"></div>
+
+    <audio id="audioPlayer" src="lagu.mp3" preload="auto"></audio>
+    <audio id="polaroidAudio" src="polaroid.mp3" loop></audio>
+
+    <input type="file" id="localImageInput" accept="image/*" style="display: none;" onchange="loadLocalImage(event)">
+    <input type="file" id="localAudioInput" accept="audio/*" style="display: none;" onchange="loadLocalAudio(event)">
+    <input type="file" id="localVideoInput" accept="video/mp4, video/*" style="display: none;" onchange="loadLocalVideo(event)">
+    <input type="file" id="polaroidFileInput" accept="image/*" style="display: none;" onchange="addNewPolaroidPhoto(event)">
+    <input type="file" id="polaroidReplaceInput" accept="image/*" style="display: none;" onchange="replacePolaroidPhoto(event)">
+    <input type="file" id="polaroidAudioInput" accept="audio/*" style="display: none;" onchange="loadPolaroidAudio(event)">
+
+    <div id="polaroidPageLayer">
+        <div id="polaroidAlbumBg" style="background-image: url('album.jpg');"></div>
+        <div id="polaroidGradientOverlay"></div>
+
+        <div class="polaroid-top-bar">
+            <span class="polaroid-page-title">Galeri Polaroid</span>
+            <div style="display: flex; gap: 3px;">
+                <button class="pill-btn" onclick="shufflePolaroidLayout()" title="Acak Posisi Kartu">Acak</button>
+                <button class="pill-btn" onclick="downloadAllPolaroids()" title="Download Semua Sekaligus">Download</button>
+                <button class="pill-btn" onclick="document.getElementById('polaroidFileInput').click()">Tambah</button>
+            </div>
+        </div>
+
+        <div class="polaroid-feed-scroll" id="polaroidFeedContainer"></div>
+
+        <button class="pill-btn" onclick="toggleSlidePage()" style="position: fixed; bottom: 20px; left: 20px; right: 20px; width: calc(100% - 40px); z-index: 700; max-width: 400px; margin: 0 auto; height: 40px; font-size: 11px; letter-spacing: 2px;">Kembali</button>
+    </div>
+
+    <div class="viewport-container" id="mainViewportContainer">
+        <div class="page-slide" id="mainSlideContainer">
+            <div>
+                <div class="top-header-expanded-actions" id="topExpandedActionRow">
+                    <button class="pill-btn" onclick="toggleLyricsExpandView()">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                        <span>Sembunyikan Lirik</span>
+                    </button>
+                    <div class="clean-floating-credit" style="color:#ffffff;">CREATED BY MASTEN</div>
+                </div>
+
+                <div class="top-header">
+                    <button class="pill-btn" onclick="toggleSlidePage()">
+                        <svg width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <line x1="0" y1="1" x2="14" y2="1"/>
+                            <line x1="0" y1="5" x2="14" y2="5"/>
+                            <line x1="0" y1="9" x2="14" y2="9"/>
+                        </svg>
+                        <span>POLAROID</span>
+                    </button>
+                    
+                    <div class="header-right-group">
+                        <button id="canvasToggleBtn" class="pill-btn" onclick="toggleCanvas()">VISUAL: OFF</button>
+                        <button class="icon-circle-btn" onclick="toggleGuideModal()">?</button>
+                    </div>
+                </div>
+
+                <div class="issue-bar">
+                    <div class="issue-left">THE MEMORY<br>ISSUE</div>
+                    <div class="issue-right">SIDE A<br>MEMORIES</div>
+                </div>
+
+                <div class="song-info-wrapper">
+                    <div class="song-titles">
+                        <span>/ PLAYLIST</span>
+                        <h1 id="songTitleDisplay" onclick="changeSongTitle()">if you could see me cryin in my<br><span id="songTitleSpan" style="text-transform: none;">room</span></h1>
+                        <div class="artist-name" id="artistDisplay" onclick="changeArtist()">Arash Buana & Raissa Anggiani</div>
+                    </div>
+                    
+                    <div class="album-art-container" title="Klik foto untuk ganti gambar">
+                        <div class="album-art" onclick="document.getElementById('localImageInput').click()">
+                            <img id="albumImg" src="album.jpg" alt="Album Art">
+                            <div class="vinyl-badge" onclick="event.stopPropagation(); document.getElementById('localAudioInput').click()" title="Pilih file MP3">🎵</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tracker-section">
+                    <span class="tracker-step">CHAPTER // 01 - MEMORIES</span>
+                    <div class="tracker-main-title">WORDS LEFT UNSAID</div>
+                    <div class="tracker-playing-row">
+                        <span class="tracker-playing-label">NOW PLAYING</span>
+                        <span class="tracker-playing-time" id="time-display">00:00</span>
+                    </div>
+                </div>
+
+                <div class="content-box">
+                    <div class="tab-nav">
+                        <button class="tab-btn active" onclick="switchTab('lyrics', event)">Lyrics</button>
+                        <button class="tab-btn" onclick="switchTab('edit', event)">Lyrics Edits</button>
+                        <button class="tab-btn" onclick="switchTab('message', event)">Message</button>
+                    </div>
+
+                    <div id="lyrics-tab" class="tab-content active">
+                        <div class="lyrics-scroll-wrapper" id="lyricsScrollWrapper">
+                            <div id="lyricsListContainer"></div>
+                        </div>
+                        
+                        <button class="toggle-lyrics-view-btn" id="toggleLyricsBtn" onclick="toggleLyricsExpandView()">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            <span>Tampilkan Liriknya</span>
+                        </button>
+
+                        <div class="embedded-player-area">
+                            <div class="player-main-controls" style="margin-bottom:6px;">
+                                <button class="play-btn" onclick="togglePlay()">
+                                    <svg class="playIconEmbedded" width="14" height="16" viewBox="0 0 14 16" fill="currentColor"><polygon points="0,0 14,8 0,16"/></svg>
+                                    <svg class="pauseIconEmbedded" width="14" height="16" viewBox="0 0 14 16" fill="currentColor" style="display:none;"><rect width="4" height="16"/><rect x="10" width="4" height="16"/></svg>
+                                </button>
+                                <div class="progress-area">
+                                    <div class="song-meta-bottom">
+                                        <div class="song-titles-group">
+                                            <span class="meta-song-title" id="footerSongTitleEmbedded">if you could see me cryin in my room</span>
+                                            <span class="meta-artist-name" id="footerArtistNameEmbedded">Arash Buana & Raissa Anggiani</span>
+                                        </div>
+                                        <div class="duration-and-visualizer">
+                                            <span class="duration-text-right" id="duration-text-embedded">0:00/0:35</span>
+                                            <div class="audio-visualizer" id="audioVisEmbedded"></div>
+                                        </div>
+                                    </div>
+                                    <div class="progress-bar-track" onclick="seekProgress(event)">
+                                        <div class="progress-bar-fill" id="progressBarFillEmbedded"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="edit-tab" class="tab-content"></div>
+
+                    <div id="message-tab" class="tab-content">
+                        <div class="message-view">
+                            <div class="message-text-content" id="messageTextDisplay" onclick="editMessage()"></div>
+                            
+                            <div class="postcard-card" id="memoryPostcard">
+                                <div class="postcard-bg-blur" id="postcardBgBlur" style="background-image: url('album.jpg');"></div>
+                                <div class="postcard-header">
+                                    <img id="postcardImg" src="album.jpg" class="postcard-thumb" alt="Postcard Art">
+                                    <div class="postcard-song-info">
+                                        <h4 id="postcardSongTitle">if you could see me cryin in my room</h4>
+                                        <p id="postcardArtistName">Arash Buana & Raissa Anggiani</p>
+                                    </div>
+                                </div>
+                                <div class="postcard-body-text" id="postcardMessageText">
+                                    Terima kasih sudah menjadi rumah tempatku pulang dan bersandar selamanya.
+                                </div>
+                                <div class="postcard-credit">CREATED BY MASTEN</div>
+                            </div>
+
+                            <div class="postcard-actions">
+                                <button class="postcard-btn" onclick="downloadPostcard()">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="7 10 12 15 17 10"></polyline>
+                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                    </svg>
+                                    Download
+                                </button>
+                                <a id="waShareLink" href="https://wa.me/6281461232770?text=Halo,%20aku%20mau%20kirim%20pesan%20dari%20Keepsake" target="_blank" class="postcard-btn">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                                    </svg>
+                                    WhatsApp
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clean-lyric-display" onclick="togglePlay()">
+                <div id="activeLyricLine"></div>
+            </div>
+
+            <div class="clean-floating-area">
+                <button class="control-pill-btn active-status" onclick="toggleCleanView()">SHOW</button>
+                <div class="clean-floating-credit">CREATED BY MASTEN</div>
+            </div>
+
+            <div class="bottom-wrapper" id="mainBottomPlayerWrapper">
+                <div class="bottom-player">
+                    <div class="player-main-controls">
+                        <button class="play-btn" onclick="togglePlay()">
+                            <svg class="playIconMain" width="14" height="16" viewBox="0 0 14 16" fill="currentColor"><polygon points="0,0 14,8 0,16"/></svg>
+                            <svg class="pauseIconMain" width="14" height="16" viewBox="0 0 14 16" fill="currentColor" style="display:none;"><rect width="4" height="16"/><rect x="10" width="4" height="16"/></svg>
+                        </button>
+                        <div class="progress-area">
+                            <div class="song-meta-bottom">
+                                <div class="song-titles-group">
+                                    <span class="meta-song-title" id="footerSongTitle">if you could see me cryin in my room</span>
+                                    <span class="meta-artist-name" id="footerArtistName">Arash Buana & Raissa Anggiani</span>
+                                </div>
+                                <div class="duration-and-visualizer">
+                                    <span class="duration-text-right" id="duration-text">0:00/0:35</span>
+                                    <div class="audio-visualizer" id="audioVisMain"></div>
+                                </div>
+                            </div>
+                            <div class="progress-bar-track" onclick="seekProgress(event)">
+                                <div class="progress-bar-fill" id="progressBarFillMain"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="player-sub-info">
+                        <button class="control-pill-btn" onclick="document.getElementById('localVideoInput').click()">CHANGE VISUAL</button>
+                        <div class="custom-control-icons">
+                            <button class="control-pill-btn" onclick="toggleLoop()" id="loopBtn">LOOP: OFF</button>
+                            <button class="control-pill-btn" onclick="toggleCleanView()" id="cleanViewBtn">HIDE</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-note" id="footerNoteText">CREATED BY MASTEN</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="guide-modal-overlay" id="guideModal">
+        <div class="guide-modal-content">
+            <div class="guide-modal-bg-blur" id="guideModalBgBlur" style="background-image: url('album.jpg');"></div>
+            
+            <div class="guide-body">
+                <h3>📖 Buku Panduan Penggunaan</h3>
+                <p>Panduan lengkap dan praktis cara mengoperasikan seluruh fitur dalam aplikasi:</p>
+                <ul>
+                    <li><b>1. Mengganti Lagu & Foto Sampul:</b>
+                        <ul>
+                            <li>Ketuk ikon musik <code>🎵</code> kecil di pojok kanan bawah sampul album untuk mengunggah dan memutar file lagu MP3 pilihanmu.</li>
+                            <li>Ketuk langsung gambar sampul album utama untuk mengganti foto utamanya sesuai keinginan.</li>
+                        </ul>
+                    </li>
+                    <li><b>2. Galeri Polaroid & Interaksi Foto:</b> 
+                        <ul>
+                          <li><b>Acak Posisi:</b> Ketuk tombol <b>"Acak"</b> di bagian atas galeri untuk mereset dan mengacak tata letak kartu polaroid secara otomatis agar kembali rapi.</li>
+                            <li><b>Download Semua:</b> Ketuk tombol <b>"Download"</b> di atas galeri untuk menyimpan seluruh tampilan layar galeri polaroid beserta background blur-nya sekaligus sebagai satu gambar PNG beresolusi tinggi.</li>
+                            <li><b>Tambah Foto Baru:</b> Ketuk tombol <b>"Tambah"</b> di bagian atas galeri untuk memasukkan foto baru dari perangkatmu.</li>
+                            <li><b>Navigasi & Transformasi:</b> Geser layar untuk menjelajah, gunakan dua jari untuk memperbesar/mencubit (*pinch-to-zoom*) atau memutar (*rotate*) foto, dan satu jari untuk menggeser posisi gambar di dalam bingkai.</li>
+                            <li><b>Sisi Belakang Kartu:</b> Ketuk 2 kali secara cepat pada bagian depan kartu untuk membalik ke belakang. Kamu bisa mengetik langsung nama pada kolom <code>(Isi Nama)</code>, menulis pesan rahasia, dan mengubah stempel tanggal sesuai keinginan!</li>
+                        </ul>
+                    </li>
+                    <li><b>3. Sinkronisasi & Edit Lirik:</b> 
+                        <ul>
+                            <li>Masuk ke tab <b>"Lyrics Edits"</b> di halaman utama.</li>
+                            <li>Masukkan teks lirik baru baris per baris, putar lagu, lalu ketuk tombol <b>"Rekam Baris Ini"</b> pas di ketukan vokal penyanyi agar waktunya sinkron otomatis.</li>
+                        </ul>
+                    </li>
+                    <li><b>4. Mode Layar Bersih (HIDE / SHOW):</b> 
+                        <ul>
+                            <li>Tekan tombol <b>"HIDE"</b> di bagian bawah untuk menyembunyikan semua menu secara sinematik dan menikmati tampilan visual pemutar musik secara penuh.</li>
+                            <li>Tekan tombol <b>"SHOW"</b> untuk memunculkan kembali seluruh menu navigasi.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <button class="guide-close-btn" onclick="toggleGuideModal()">Tutup Panduan</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
