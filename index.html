@@ -37,7 +37,7 @@
             position: relative;
         }
 
-        /* --- SPLASH SCREEN SINEMATIK --- */
+        /* --- SPLASH SCREEN (FIXED TOUCH & CLICK) --- */
         #splashScreen {
             position: fixed;
             top: 0;
@@ -45,7 +45,7 @@
             width: 100vw;
             height: 100vh;
             background: #000000;
-            z-index: 9999;
+            z-index: 99999;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -59,6 +59,7 @@
         #splashScreen.fade-out {
             opacity: 0;
             visibility: hidden;
+            pointer-events: none !important;
         }
 
         .splash-gradient-overlay {
@@ -69,11 +70,13 @@
             height: 100vh;
             background: radial-gradient(circle at 50% 40%, var(--accent-color) 0%, rgba(0, 0, 0, 0.85) 75%);
             opacity: 0.6;
-            z-index: -1;
-            pointer-events: none;
+            z-index: 1;
+            pointer-events: none !important;
         }
 
         .splash-card-content {
+            position: relative;
+            z-index: 10;
             background: rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
@@ -87,6 +90,7 @@
             max-width: 350px;
             width: 100%;
             animation: floatSplashCard 4s ease-in-out infinite;
+            pointer-events: auto !important;
         }
 
         @keyframes floatSplashCard {
@@ -128,6 +132,10 @@
         }
 
         .tap-enter-btn {
+            position: relative;
+            z-index: 20;
+            pointer-events: auto !important;
+            cursor: pointer;
             background: var(--accent-color);
             border: 1px solid rgba(255, 255, 255, 0.4);
             color: #ffffff;
@@ -137,7 +145,6 @@
             height: 46px;
             padding: 0 30px;
             border-radius: 50px;
-            cursor: pointer;
             text-transform: uppercase;
             font-weight: 700;
             display: inline-flex;
@@ -206,7 +213,6 @@
             pointer-events: none;
         }
 
-        /* --- TRANSISI MODERN & SUPER MULUS (FADE + SCALE 60FPS) --- */
         #polaroidPageLayer {
             position: fixed;
             top: 0;
@@ -327,7 +333,6 @@
             text-transform: uppercase;
         }
 
-        /* STYLING KARTU POLAROID & EFEK FLIP 3D */
         .polaroid-card {
             width: 210px;
             position: absolute;
@@ -337,6 +342,7 @@
             cursor: grab;
             perspective: 1000px;
             background: transparent;
+            height: auto !important;
         }
 
         .polaroid-card:active {
@@ -358,27 +364,49 @@
         .polaroid-front, .polaroid-back {
             position: relative;
             width: 100%;
-            background: #ffffff;
+            background: #ffffff !important;
             color: #111111;
-            padding: 10px 10px 16px 10px;
+            padding: 10px 10px 18px 10px;
             border-radius: 3px 2px 4px 2px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
         }
 
+      .polaroid-front {
+            position: relative;
+            width: 100%;
+            background: #ffffff !important;
+            color: #111111;
+            padding: 10px 10px 30px 10px; /* Angka 30px ini yang bikin bagian bawah polaroid melar ke bawah */
+            border-radius: 3px 2px 4px 2px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+      }
+      
         .polaroid-back {
             position: absolute;
             top: 0;
             left: 0;
             height: 100%;
-            transform: rotateY(180deg) translateZ(1px);
+            transform: rotateY(180deg);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            background: #ffffff;
+            background: #ffffff !important;
+            background-color: #ffffff !important;
             color: #111111;
+            z-index: 2;
         }
+
+        
 
         .polaroid-card-top-row {
             display: flex;
@@ -410,17 +438,19 @@
         }
 
         .polaroid-img-box img {
-            max-width: none;
-            max-height: none;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
+            max-width: 100% !important;
+            max-height: 100% !important;
+            width: auto !important;
+            height: auto !important;
+            object-fit: contain !important;
             position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             pointer-events: auto;
             filter: sepia(0.2) contrast(1.05) brightness(0.95);
             user-select: none;
             will-change: transform;
-            transform-origin: center center;
         }
 
         .polaroid-placeholder-plus {
@@ -469,20 +499,21 @@
             font-family: 'Caveat', cursive;
             font-size: 14px;
             font-weight: 700;
-            text-align: center;
+            text-align: center !important;
             color: #222222;
             border: none;
             background: transparent;
-            width: 100%;
+            width: 100% !important;
+            box-sizing: border-box !important;
             outline: none;
             cursor: pointer;
-            margin-bottom: 2px;
+            margin: 15px auto 2px auto !important;
             letter-spacing: 0.5px;
             resize: none;
             overflow: hidden;
             line-height: 1.2;
-            display: block;
-            transform: translateY(12px);
+            display: block !important;
+            transform: none !important;
         }
 
         .polaroid-date-edit {
@@ -499,7 +530,7 @@
             margin-bottom: 2px;
             font-weight: 600;
             text-transform: uppercase;
-            transform: translateY(8px);
+            transform: none !important;
         }
 
         .polaroid-credit-text {
@@ -515,7 +546,6 @@
             margin-top: 18px;
         }
 
-        /* Styling khusus teks di sisi belakang polaroid dengan font berbeda */
         .polaroid-back-title {
             font-family: 'Caveat', cursive !important;
             font-size: 13px !important;
@@ -581,7 +611,6 @@
             text-transform: uppercase;
         }
 
-        /* --- ELEMEN HALAMAN UTAMA --- */
         .clean-view .top-header,
         .clean-view .issue-bar,
         .clean-view .song-info-wrapper,
@@ -764,7 +793,6 @@
             gap: 6px;
         }
 
-        /* Saat VISUAL: ON */
         body.visual-on .pill-btn:not(.canvas-on):not(.active-status),
         body.visual-on .icon-circle-btn:not(.active-status),
         body.visual-on .control-pill-btn:not(.active-status),
@@ -1739,7 +1767,7 @@
 
         <div class="polaroid-feed-scroll" id="polaroidFeedContainer"></div>
 
-        <button class="pill-btn" onclick="toggleSlidePage()" style="position: fixed; bottom: 90px; left: 20px; right: 20px; width: calc(100% - 40px); z-index: 700; max-width: 400px; margin: 0 auto; height: 40px; font-size: 11px; letter-spacing: 2px;">Kembali</button>
+        <button class="pill-btn" onclick="toggleSlidePage()" style="position: fixed; bottom: 20px; left: 20px; right: 20px; width: calc(100% - 40px); z-index: 700; max-width: 400px; margin: 0 auto; height: 40px; font-size: 11px; letter-spacing: 2px;">Kembali</button>
     </div>
 
     <div class="viewport-container" id="mainViewportContainer">
@@ -2102,7 +2130,10 @@
 
         function openWebApp() {
             const splash = document.getElementById('splashScreen');
+            if (!splash) return;
+            
             splash.classList.add('fade-out');
+            splash.style.pointerEvents = 'none';
             
             audio.play().catch(() => {});
             isPlaying = true;
@@ -2146,7 +2177,7 @@
                 let imgScale = item.imgScale || 1;
                 let imgRotate = item.imgRotate || 0;
                 let imgContent = item.img 
-                    ? `<img id="polaroid-img-${index}" src="${item.img}" style="transform: translate(${imgX}px, ${imgY}px) scale(${imgScale}) rotate(${imgRotate}deg);" alt="Polaroid Memory">`
+                    ? `<img id="polaroid-img-${index}" src="${item.img}" style="transform: translate(-50%, -50%) translate(${imgX}px, ${imgY}px) scale(${imgScale}) rotate(${imgRotate}deg);" alt="Polaroid Memory">`
                     : `<div class="polaroid-placeholder-plus">+</div>`;
 
                 let flippedClass = item.flipped ? ' flipped' : '';
@@ -2176,7 +2207,7 @@
                                 <div class="polaroid-credit-text">CREATED BY MASTEN</div>
                             </div>
                             
-                            <div class="polaroid-back">
+                            <div class="polaroid-back" style="background: #ffffff !important; background-color: #ffffff !important;">
                                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 6px;">
                                     <span style="font-size: 6px; letter-spacing: 1px; font-weight: 800; color: var(--accent-color); font-family: 'Plus Jakarta Sans', sans-serif; display: flex; align-items: center; gap: 4px; white-space: nowrap;">
                                         TO MY DEAREST <input type="text" class="secret-name-input" onclick="event.stopPropagation()" value="${item.secretName || ''}" onchange="updateSecretName(${index}, this.value)" placeholder="(Isi Nama)">
@@ -2365,7 +2396,7 @@
                             let imgY = polaroidPhotos[index].imgY || 0;
                             let currentScale = polaroidPhotos[index].imgScale;
                             let currentRotate = polaroidPhotos[index].imgRotate || 0;
-                            imgEl.style.transform = `translate(${imgX}px, ${imgY}px) scale(${currentScale}) rotate(${currentRotate}deg)`;
+                            imgEl.style.transform = `translate(-50%, -50%) translate(${imgX}px, ${imgY}px) scale(${currentScale}) rotate(${currentRotate}deg)`;
                             e.stopPropagation();
                         } else if (e.touches.length === 1) {
                             let dx = (e.touches[0].clientX - startX) / (boardScale * polaroidPhotos[index].scale);
@@ -2378,7 +2409,7 @@
                             let imgY = polaroidPhotos[index].imgY;
                             let currentScale = polaroidPhotos[index].imgScale || 1;
                             let currentRotate = polaroidPhotos[index].imgRotate || 0;
-                            imgEl.style.transform = `translate(${imgX}px, ${imgY}px) scale(${currentScale}) rotate(${currentRotate}deg)`;
+                            imgEl.style.transform = `translate(-50%, -50%) translate(${imgX}px, ${imgY}px) scale(${currentScale}) rotate(${currentRotate}deg)`;
                             e.stopPropagation();
                         }
                     }, { passive: true });
@@ -2619,56 +2650,273 @@
 
         function downloadSinglePolaroid(index) {
             const cardElement = document.getElementById(`polaroid-card-${index}`);
-            const actionGroup = cardElement.querySelector('.polaroid-top-action-group');
-            
-            if(actionGroup) actionGroup.style.display = 'none';
+            if (!cardElement) return;
 
-            html2canvas(cardElement, {
+            const clone = cardElement.cloneNode(true);
+            clone.style.transform = 'none';
+            clone.style.position = 'relative';
+            clone.style.left = '0';
+            clone.style.top = '0';
+            clone.style.margin = '0';
+
+            const actionGroup = clone.querySelector('.polaroid-top-action-group');
+            if (actionGroup) actionGroup.style.display = 'none';
+
+            const isFlipped = cardElement.classList.contains('flipped');
+            const frontEl = clone.querySelector('.polaroid-front');
+            const backEl = clone.querySelector('.polaroid-back');
+            const innerEl = clone.querySelector('.polaroid-inner');
+            
+            if (isFlipped) {
+                if (innerEl) innerEl.style.transform = 'none';
+                if (frontEl) frontEl.remove();
+                if (backEl) {
+                    backEl.style.setProperty('display', 'flex', 'important');
+                    backEl.style.position = 'relative';
+                    backEl.style.transform = 'none';
+                    backEl.style.backgroundColor = '#ffffff';
+
+                    const flipBtn = backEl.querySelector('.polaroid-icon-btn');
+                    if (flipBtn) flipBtn.remove();
+                }
+            } else {
+                if (backEl) backEl.remove();
+                if (frontEl) frontEl.style.display = 'block';
+            }
+
+            const captionTextarea = clone.querySelector('.polaroid-caption-edit');
+            if (captionTextarea) {
+                const divCaption = document.createElement('div');
+                divCaption.innerText = captionTextarea.value || ' ';
+                divCaption.style.fontFamily = "'Caveat', cursive";
+                divCaption.style.fontSize = '14px';
+                divCaption.style.fontWeight = '700';
+                divCaption.style.textAlign = 'center';
+                divCaption.style.color = '#222222';
+                divCaption.style.width = '100%';
+                divCaption.style.marginTop = '15px';
+                divCaption.style.marginBottom = '2px';
+                divCaption.style.lineHeight = '1.2';
+                captionTextarea.parentNode.replaceChild(divCaption, captionTextarea);
+            }
+
+            const dateInput = clone.querySelector('.polaroid-date-edit');
+            if (dateInput) {
+                const divDate = document.createElement('div');
+                divDate.innerText = dateInput.value || ' ';
+                divDate.style.fontFamily = "'Plus Jakarta Sans', sans-serif";
+                divDate.style.fontSize = '7px';
+                divDate.style.letterSpacing = '1px';
+                divDate.style.color = '#777777';
+                divDate.style.textAlign = 'center';
+                divDate.style.width = '100%';
+                divDate.style.fontWeight = '600';
+                divDate.style.textTransform = 'uppercase';
+                divDate.style.marginBottom = '2px';
+                dateInput.parentNode.replaceChild(divDate, dateInput);
+            }
+
+            const secretMsgTextarea = clone.querySelector('.secret-text-input');
+            if (secretMsgTextarea) {
+                const divSecret = document.createElement('div');
+                divSecret.innerText = secretMsgTextarea.value || ' ';
+                divSecret.style.fontFamily = "'Caveat', cursive";
+                divSecret.style.fontSize = '15px';
+                divSecret.style.fontWeight = '700';
+                divSecret.style.textAlign = 'center';
+                divSecret.style.color = '#222222';
+                divSecret.style.width = '100%';
+                divSecret.style.marginTop = '40px';
+                divSecret.style.lineHeight = '1.8';
+                secretMsgTextarea.parentNode.replaceChild(divSecret, secretMsgTextarea);
+            }
+
+            const secretNameInput = clone.querySelector('.secret-name-input');
+            if (secretNameInput) {
+                const spanName = document.createElement('span');
+                spanName.innerText = secretNameInput.value || ' ';
+                spanName.style.fontFamily = "'Caveat', cursive";
+                spanName.style.fontSize = '14px';
+                spanName.style.fontWeight = '700';
+                spanName.style.color = 'var(--accent-color)';
+                secretNameInput.parentNode.replaceChild(spanName, secretNameInput);
+            }
+
+            const secretDateInput = clone.querySelector('.secret-date-input');
+            if (secretDateInput) {
+                const divSecDate = document.createElement('div');
+                divSecDate.innerText = secretDateInput.value || ' ';
+                divSecDate.style.fontFamily = "'Plus Jakarta Sans', sans-serif";
+                divSecDate.style.fontSize = '7px';
+                divSecDate.style.letterSpacing = '1.5px';
+                divSecDate.style.color = '#777777';
+                divSecDate.style.textAlign = 'center';
+                divSecDate.style.width = '100%';
+                divSecDate.style.fontWeight = '700';
+                divSecDate.style.textTransform = 'uppercase';
+                secretDateInput.parentNode.replaceChild(divSecDate, secretDateInput);
+            }
+
+            const container = document.createElement('div');
+            container.style.position = 'fixed';
+            container.style.top = '-9999px';
+            container.style.left = '-9999px';
+            container.style.width = '210px';
+            container.appendChild(clone);
+            document.body.appendChild(container);
+
+            html2canvas(clone, {
                 scale: 3,
                 useCORS: true,
+                allowTaint: true,
                 backgroundColor: null
             }).then(canvas => {
-                if(actionGroup) actionGroup.style.display = 'flex';
-
+                document.body.removeChild(container);
                 const imageLink = document.createElement('a');
                 imageLink.download = `polaroid-memory-${index + 1}.png`;
                 imageLink.href = canvas.toDataURL('image/png');
                 imageLink.click();
             }).catch(err => {
-                if(actionGroup) actionGroup.style.display = 'flex';
-                alert("Gagal mendownload foto polaroid. Pastikan gambar termuat dengan sempurna!");
+                if (document.body.contains(container)) document.body.removeChild(container);
+                alert("Gagal mendownload foto polaroid.");
             });
         }
 
         function downloadAllPolaroids() {
             const layerElement = document.getElementById('polaroidPageLayer');
-            const topBar = layerElement.querySelector('.polaroid-top-bar');
-            const backBtn = layerElement.querySelector('button[onclick="toggleSlidePage()"]');
-            
-            if(topBar) topBar.style.display = 'none';
-            if(backBtn) backBtn.style.display = 'none';
+            if (!layerElement) return;
 
-            const actionGroups = layerElement.querySelectorAll('.polaroid-top-action-group');
+            const cloneLayer = layerElement.cloneNode(true);
+            
+            const topBar = cloneLayer.querySelector('.polaroid-top-bar');
+            const backBtn = cloneLayer.querySelector('button[onclick="toggleSlidePage()"]');
+            const actionGroups = cloneLayer.querySelectorAll('.polaroid-top-action-group');
+            if (topBar) topBar.style.display = 'none';
+            if (backBtn) backBtn.style.display = 'none';
             actionGroups.forEach(el => el.style.display = 'none');
 
-            html2canvas(layerElement, {
+            const cards = cloneLayer.querySelectorAll('.polaroid-card');
+            cards.forEach((card, idx) => {
+                const origCard = layerElement.querySelectorAll('.polaroid-card')[idx];
+                const isFlipped = origCard ? origCard.classList.contains('flipped') : false;
+                
+                const frontEl = card.querySelector('.polaroid-front');
+                const backEl = card.querySelector('.polaroid-back');
+                const innerEl = card.querySelector('.polaroid-inner');
+
+                if (isFlipped) {
+                    if (innerEl) innerEl.style.transform = 'none';
+                    if (frontEl) frontEl.remove();
+                    if (backEl) {
+                        backEl.style.setProperty('display', 'flex', 'important');
+                        backEl.style.position = 'relative';
+                        backEl.style.transform = 'none';
+                        backEl.style.backgroundColor = '#ffffff';
+
+                        const flipBtn = backEl.querySelector('.polaroid-icon-btn');
+                        if (flipBtn) flipBtn.remove();
+                    }
+                } else {
+                    if (backEl) backEl.remove();
+                    if (frontEl) frontEl.style.display = 'block';
+                }
+
+                const captionTextarea = card.querySelector('.polaroid-caption-edit');
+                if (captionTextarea) {
+                    const div = document.createElement('div');
+                    div.innerText = captionTextarea.value || ' ';
+                    div.style.fontFamily = "'Caveat', cursive";
+                    div.style.fontSize = '14px';
+                    div.style.fontWeight = '700';
+                    div.style.textAlign = 'center';
+                    div.style.color = '#222222';
+                    div.style.width = '100%';
+                    div.style.marginTop = '6px';
+                    div.style.marginBottom = '2px';
+                    div.style.lineHeight = '1.2';
+                    captionTextarea.parentNode.replaceChild(div, captionTextarea);
+                }
+
+                const dateInput = card.querySelector('.polaroid-date-edit');
+                if (dateInput) {
+                    const divDate = document.createElement('div');
+                    divDate.innerText = dateInput.value || ' ';
+                    divDate.style.fontFamily = "'Plus Jakarta Sans', sans-serif";
+                    divDate.style.fontSize = '7px';
+                    divDate.style.letterSpacing = '1px';
+                    divDate.style.color = '#777777';
+                    divDate.style.textAlign = 'center';
+                    divDate.style.width = '100%';
+                    divDate.style.fontWeight = '600';
+                    divDate.style.textTransform = 'uppercase';
+                    divDate.style.marginBottom = '2px';
+                    dateInput.parentNode.replaceChild(divDate, dateInput);
+                }
+
+                const secretMsgTextarea = card.querySelector('.secret-text-input');
+                if (secretMsgTextarea) {
+                    const divSecret = document.createElement('div');
+                    divSecret.innerText = secretMsgTextarea.value || ' ';
+                    divSecret.style.fontFamily = "'Caveat', cursive";
+                    divSecret.style.fontSize = '15px';
+                    divSecret.style.fontWeight = '700';
+                    divSecret.style.textAlign = 'center';
+                    divSecret.style.color = '#222222';
+                    divSecret.style.width = '100%';
+                    divSecret.style.marginTop = '40px';
+                    divSecret.style.lineHeight = '1.8';
+                    secretMsgTextarea.parentNode.replaceChild(divSecret, secretMsgTextarea);
+                }
+
+                const secretNameInput = card.querySelector('.secret-name-input');
+                if (secretNameInput) {
+                    const spanName = document.createElement('span');
+                    spanName.innerText = secretNameInput.value || ' ';
+                    spanName.style.fontFamily = "'Caveat', cursive";
+                    spanName.style.fontSize = '14px';
+                    spanName.style.fontWeight = '700';
+                    spanName.style.color = 'var(--accent-color)';
+                    secretNameInput.parentNode.replaceChild(spanName, secretNameInput);
+                }
+
+                const secretDateInput = card.querySelector('.secret-date-input');
+                if (secretDateInput) {
+                    const divSecDate = document.createElement('div');
+                    divSecDate.innerText = secretDateInput.value || ' ';
+                    divSecDate.style.fontFamily = "'Plus Jakarta Sans', sans-serif";
+                    divSecDate.style.fontSize = '7px';
+                    divSecDate.style.letterSpacing = '1.5px';
+                    divSecDate.style.color = '#777777';
+                    divSecDate.style.textAlign = 'center';
+                    divSecDate.style.width = '100%';
+                    divSecDate.style.fontWeight = '700';
+                    divSecDate.style.textTransform = 'uppercase';
+                    secretDateInput.parentNode.replaceChild(divSecDate, secretDateInput);
+                }
+            });
+
+            const container = document.createElement('div');
+            container.style.position = 'fixed';
+            container.style.top = '0';
+            container.style.left = '0';
+            container.style.zIndex = '-9999';
+            container.appendChild(cloneLayer);
+            document.body.appendChild(container);
+
+            html2canvas(cloneLayer, {
                 scale: 2,
                 useCORS: true,
+                allowTaint: true,
                 backgroundColor: null
             }).then(canvas => {
-                if(topBar) topBar.style.display = 'flex';
-                if(backBtn) backBtn.style.display = 'block';
-                actionGroups.forEach(el => el.style.display = 'flex');
-
+                document.body.removeChild(container);
                 const imageLink = document.createElement('a');
                 imageLink.download = 'galeri-polaroid-lengkap.png';
                 imageLink.href = canvas.toDataURL('image/png');
                 imageLink.click();
             }).catch(err => {
-                if(topBar) topBar.style.display = 'flex';
-                if(backBtn) backBtn.style.display = 'block';
-                actionGroups.forEach(el => el.style.display = 'flex');
-                alert("Gagal mendownload galeri. Coba lagi ya!");
+                if (document.body.contains(container)) document.body.removeChild(container);
+                alert("Gagal mendownload galeri.");
             });
         }
 
