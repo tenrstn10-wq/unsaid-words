@@ -37,7 +37,7 @@
             position: relative;
         }
 
-        /* --- SPLASH SCREEN (FIXED TOUCH & CLICK) --- */
+        /* --- SPLASH SCREEN & GRAVITY SLIDER EFFECT --- */
         #splashScreen {
             position: fixed;
             top: 0;
@@ -131,37 +131,103 @@
             font-weight: 700;
         }
 
-        .tap-enter-btn {
+        /* Gravity Swipe Track */
+        .gravity-slider-track {
             position: relative;
-            z-index: 20;
-            pointer-events: auto !important;
-            cursor: pointer;
-            background: var(--accent-color);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            color: #ffffff;
-            font-family: inherit;
-            font-size: 11px;
-            letter-spacing: 2px;
-            height: 46px;
-            padding: 0 30px;
-            border-radius: 50px;
-            text-transform: uppercase;
-            font-weight: 700;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-            animation: pulseBtn 2s infinite;
             width: 100%;
+            height: 52px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            padding: 4px;
+            user-select: none;
+            overflow: visible; /* Biar partikel bisa keluar jalur sedikit jika jatuh */
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
+            z-index: 20;
         }
 
-        @keyframes pulseBtn {
-            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        .gravity-slider-fill {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            height: calc(100% - 8px);
+            width: 44px;
+            background: var(--accent-color);
+            border-radius: 50px;
+            transition: width 0.05s linear;
+            z-index: 1;
         }
+
+        .gravity-slider-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.85);
+            z-index: 2;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .gravity-slider-thumb {
+            position: absolute;
+            left: 4px;
+            width: 44px;
+            height: 44px;
+            background: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #111;
+            cursor: grab;
+            z-index: 4;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            touch-action: none;
+        }
+
+        .gravity-slider-thumb:active {
+            cursor: grabbing;
+        }
+
+        /* Wadah partikel efek gravity di dalam track */
+        .gravity-particles-box {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            border-radius: 50px;
+            z-index: 3;
+        }
+
+        .g-particle {
+            position: absolute;
+            background: radial-gradient(circle, #ffffff 0%, var(--accent-color) 70%);
+            border-radius: 50%;
+            opacity: 0.9;
+            pointer-events: none;
+            animation: fallParticle 0.8s ease-in forwards;
+        }
+
+        @keyframes fallParticle {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--dx), var(--dy)) scale(0.1);
+                opacity: 0;
+            }
+        }
+
 
         #dynamicAlbumBg {
             position: fixed;
@@ -366,7 +432,7 @@
             width: 100%;
             background: #ffffff !important;
             color: #111111;
-            padding: 10px 10px 18px 10px;
+            padding: 10px 10px 30px 10px;
             border-radius: 3px 2px 4px 2px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
             backface-visibility: hidden;
@@ -375,21 +441,6 @@
             display: flex;
             flex-direction: column;
         }
-
-      .polaroid-front {
-            position: relative;
-            width: 100%;
-            background: #ffffff !important;
-            color: #111111;
-            padding: 10px 10px 30px 10px; /* Angka 30px ini yang bikin bagian bawah polaroid melar ke bawah */
-            border-radius: 3px 2px 4px 2px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-      }
       
         .polaroid-back {
             position: absolute;
@@ -404,9 +455,8 @@
             background-color: #ffffff !important;
             color: #111111;
             z-index: 2;
+            padding: 10px 10px 18px 10px;
         }
-
-        
 
         .polaroid-card-top-row {
             display: flex;
@@ -513,7 +563,6 @@
             overflow: hidden;
             line-height: 1.2;
             display: block !important;
-            transform: none !important;
         }
 
         .polaroid-date-edit {
@@ -530,7 +579,6 @@
             margin-bottom: 2px;
             font-weight: 600;
             text-transform: uppercase;
-            transform: none !important;
         }
 
         .polaroid-credit-text {
@@ -544,15 +592,6 @@
             font-weight: 700;
             display: block;
             margin-top: 18px;
-        }
-
-        .polaroid-back-title {
-            font-family: 'Caveat', cursive !important;
-            font-size: 13px !important;
-            font-weight: 700;
-            letter-spacing: 0.5px !important;
-            text-transform: none;
-            color: var(--accent-color);
         }
 
         .polaroid-back-credit {
@@ -609,16 +648,6 @@
             outline: none;
             font-weight: 700;
             text-transform: uppercase;
-        }
-
-        .clean-view .top-header,
-        .clean-view .issue-bar,
-        .clean-view .song-info-wrapper,
-        .clean-view .tracker-section,
-        .clean-view .content-box,
-        .clean-view .footer-note,
-        .clean-view .bottom-player {
-            display: none !important;
         }
 
         .clean-lyric-display {
@@ -823,6 +852,16 @@
             border-bottom-color: var(--accent-color) !important;
         }
 
+body.visual-on .lyric-studio-overlay,
+body.visual-on .studio-textarea {
+    border-color: var(--accent-color) !important;
+}
+
+      body.visual-on .vinyl-badge {
+    border-color: var(--accent-color) !important;
+}
+
+      
         body.visual-on .play-btn {
             background: var(--accent-color) !important;
             border-color: var(--accent-color) !important;
@@ -939,15 +978,15 @@
 
         .vinyl-badge,
         .play-btn {
-            background: rgba(20, 20, 20, 0.4);
+            background: rgba(255, 255, 255, 0.14901960784313725);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.30196078431372547);
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0);
             cursor: pointer;
             transition: all 0.2s ease;
         }
@@ -1729,10 +1768,15 @@
             <div class="splash-badge">WELCOME TO</div>
             <div class="splash-title">Unsaid Words</div>
             <div class="splash-subtitle">Side A Memories</div>
-            <button class="tap-enter-btn" onclick="openWebApp()">
-                <span>Tap to Enter</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-            </button>
+            
+            <div class="gravity-slider-track" id="gravityTrack">
+                <div class="gravity-particles-box" id="gravityParticlesBox"></div>
+                <div class="gravity-slider-fill" id="gravityFill"></div>
+                <div class="gravity-slider-text" id="gravityText">SWIPE TO ENTER →</div>
+                <div class="gravity-slider-thumb" id="gravityThumb">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1767,7 +1811,7 @@
 
         <div class="polaroid-feed-scroll" id="polaroidFeedContainer"></div>
 
-        <button class="pill-btn" onclick="toggleSlidePage()" style="position: fixed; bottom: 80px; left: 20px; right: 20px; width: calc(100% - 40px); z-index: 700; max-width: 400px; margin: 0 auto; height: 40px; font-size: 11px; letter-spacing: 2px;">Kembali</button>
+        <button class="pill-btn" onclick="toggleSlidePage()" style="position: fixed; bottom: 20px; left: 20px; right: 20px; width: calc(100% - 40px); z-index: 700; max-width: 400px; margin: 0 auto; height: 40px; font-size: 11px; letter-spacing: 2px;">Kembali</button>
     </div>
 
     <div class="viewport-container" id="mainViewportContainer">
@@ -2090,6 +2134,106 @@
         ];
 
         const totalVisBars = 15;
+
+        // --- GRAVITY SLIDER & PARTICLE EFFECT LOGIC ---
+        const gravityTrack = document.getElementById('gravityTrack');
+        const gravityThumb = document.getElementById('gravityThumb');
+        const gravityFill = document.getElementById('gravityFill');
+        const gravityText = document.getElementById('gravityText');
+        const gravityParticlesBox = document.getElementById('gravityParticlesBox');
+
+        let isDraggingGravity = false;
+        let gravityStartX = 0;
+        let isUnlocked = false;
+
+        function spawnGravityParticle(xPos) {
+            const particle = document.createElement('div');
+            particle.className = 'g-particle';
+            
+            // Ukuran acak partikel gelembung gravitasi
+            const size = Math.floor(Math.random() * 8) + 6;
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            
+            // Muncul di sekitar posisi thumb saat digeser
+            particle.style.left = (xPos - 5) + 'px';
+            particle.style.top = (gravityTrack.clientHeight / 2 - size / 2) + 'px';
+            
+            // Jarak lemparan acak ke bawah/samping menyerupai gravitasi
+            const dx = (Math.random() - 0.5) * 40;
+            const dy = (Math.random() * 35) + 15;
+            
+            particle.style.setProperty('--dx', dx + 'px');
+            particle.style.setProperty('--dy', dy + 'px');
+            
+            gravityParticlesBox.appendChild(particle);
+            setTimeout(() => {
+                particle.remove();
+            }, 800);
+        }
+
+        function handleGravityStart(clientX) {
+            if (isUnlocked) return;
+            isDraggingGravity = true;
+            gravityStartX = clientX - gravityThumb.offsetLeft;
+        }
+
+        function handleGravityMove(clientX) {
+            if (!isDraggingGravity || isUnlocked) return;
+            let maxX = gravityTrack.clientWidth - gravityThumb.clientWidth - 4;
+            let currentX = clientX - gravityStartX;
+            currentX = Math.max(4, Math.min(currentX, maxX));
+
+            gravityThumb.style.transform = `translateX(${currentX - 4}px)`;
+            gravityFill.style.width = (currentX + gravityThumb.clientWidth - 4) + 'px';
+
+            let progress = currentX / maxX;
+            gravityText.style.opacity = Math.max(0, 1 - progress * 1.5);
+
+            // Munculkan partikel efek gravitasi secara berkala saat digeser
+            if (Math.random() < 0.4) {
+                spawnGravityParticle(currentX + 22);
+            }
+
+            if (progress > 0.88) {
+                isUnlocked = true;
+                isDraggingGravity = false;
+                gravityThumb.style.transform = `translateX(${maxX}px)`;
+                gravityFill.style.width = '100%';
+                gravityText.textContent = "✓ COMPLETE";
+                
+                // Efek partikel ekstra saat komplit
+                for(let i=0; i<12; i++) {
+                    spawnGravityParticle(maxX + 22);
+                }
+
+                setTimeout(openWebApp, 400);
+            }
+        }
+
+        function handleGravityEnd() {
+            if (!isDraggingGravity || isUnlocked) return;
+            isDraggingGravity = false;
+            let maxX = gravityTrack.clientWidth - gravityThumb.clientWidth - 4;
+            let currentLeft = gravityThumb.offsetLeft;
+            
+            if (currentLeft < maxX * 0.88) {
+                gravityThumb.style.transform = 'translateX(0px)';
+                gravityFill.style.width = '44px';
+                gravityText.style.opacity = '1';
+            }
+        }
+
+        gravityThumb.addEventListener('mousedown', (e) => handleGravityStart(e.clientX));
+        window.addEventListener('mousemove', (e) => handleGravityMove(e.clientX));
+        window.addEventListener('mouseup', handleGravityEnd);
+
+        gravityThumb.addEventListener('touchstart', (e) => handleGravityStart(e.touches[0].clientX), {passive: true});
+        window.addEventListener('touchmove', (e) => {
+            if(e.touches.length > 0) handleGravityMove(e.touches[0].clientX);
+        }, {passive: true});
+        window.addEventListener('touchend', handleGravityEnd);
+
 
         function initAudioVisualizer() {
             const containerMain = document.getElementById('audioVisMain');
@@ -3531,7 +3675,7 @@
                 imageLink.href = canvas.toDataURL('image/png');
                 imageLink.click();
             }).catch(err => {
-                alert("Gagal mendownload postcard. Pastikan gambar album sudah termuat sempurna!");
+                alert("Gagal mendownload postcard. Passikan gambar album sudah termuat sempurna!");
             });
         }
 
